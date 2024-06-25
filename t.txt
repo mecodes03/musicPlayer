@@ -1,0 +1,49 @@
+import { Playlists2 } from "@/components/Playlists2";
+import { cookies } from "next/headers";
+import {
+  SPOTIFY_ACCESS_TOKEN_COOKIE_KEY,
+  SPOTIFY_USER_PLAYLISTS_URL,
+} from "@/constants";
+
+const Page = async () => {
+  try {
+    const accessToken = cookies().get(SPOTIFY_ACCESS_TOKEN_COOKIE_KEY)?.value;
+
+    if (!accessToken) {
+      return (
+        <div>
+          You are not authorized to visit this page. please add your spotify
+          account.
+        </div>
+      );
+    }
+    
+    const playlistsResponse = await fetch(SPOTIFY_USER_PLAYLISTS_URL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!playlistsResponse.ok || playlistsResponse.status !== 200) {
+      console.log(playlistsResponse);
+      return null;
+    }
+
+    const userPlaylists = await playlistsResponse.json();
+    console.log(userPlaylists);
+
+    console.log(userPlaylists);
+
+    return (
+      <div>
+        <Playlists2 playlistsData={userPlaylists} />
+      </div>
+    );
+  } catch (error) {
+    console.log(error);
+    return <div>some error accured</div>;
+  }
+};
+
+export default Page;

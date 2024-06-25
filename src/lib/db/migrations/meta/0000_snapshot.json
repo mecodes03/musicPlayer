@@ -1,0 +1,192 @@
+{
+  "id": "05cac69e-0329-43f1-9bd7-f08f0d620751",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.api_key": {
+      "name": "api_key",
+      "schema": "",
+      "columns": {
+        "spotify_user_id": {
+          "name": "spotify_user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "youtube_user_id": {
+          "name": "youtube_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "keys": {
+          "name": "keys",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.oauth_account": {
+      "name": "oauth_account",
+      "schema": "",
+      "columns": {
+        "provider_user_id": {
+          "name": "provider_user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "access_token_expires_at": {
+          "name": "access_token_expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "provider",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "added_at": {
+          "name": "added_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.spotify_credits": {
+      "name": "spotify_credits",
+      "schema": "",
+      "columns": {
+        "spotify_user_id": {
+          "name": "spotify_user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "credits_alloted_per_day": {
+          "name": "credits_alloted_per_day",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 600
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.spotify_to_youtube": {
+      "name": "spotify_to_youtube",
+      "schema": "",
+      "columns": {
+        "spotify_song_id": {
+          "name": "spotify_song_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "youtube_song_id": {
+          "name": "youtube_song_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "id": {
+          "name": "id",
+          "columns": [
+            "spotify_song_id",
+            "youtube_song_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "spotify_to_youtube_spotify_song_id_unique": {
+          "name": "spotify_to_youtube_spotify_song_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "spotify_song_id"
+          ]
+        },
+        "spotify_to_youtube_youtube_song_id_unique": {
+          "name": "spotify_to_youtube_youtube_song_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "youtube_song_id"
+          ]
+        }
+      }
+    },
+    "public.youtube_song": {
+      "name": "youtube_song",
+      "schema": "",
+      "columns": {
+        "youtube_song_id": {
+          "name": "youtube_song_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "song": {
+          "name": "song",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "youtube_song_youtube_song_id_spotify_to_youtube_youtube_song_id_fk": {
+          "name": "youtube_song_youtube_song_id_spotify_to_youtube_youtube_song_id_fk",
+          "tableFrom": "youtube_song",
+          "tableTo": "spotify_to_youtube",
+          "columnsFrom": [
+            "youtube_song_id"
+          ],
+          "columnsTo": [
+            "youtube_song_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "public.provider": {
+      "name": "provider",
+      "schema": "public",
+      "values": [
+        "spotify",
+        "youtube"
+      ]
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
