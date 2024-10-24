@@ -24,6 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <script
+        defer
+        data-domain="playmyplaylist.vercel.app"
+        src="https://plausible.io/js/script.revenue.js"
+      ></script>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
