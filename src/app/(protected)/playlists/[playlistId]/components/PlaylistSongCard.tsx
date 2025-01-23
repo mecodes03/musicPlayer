@@ -164,7 +164,7 @@ const PlaylistSongCard = (props: PlaylistSongCardProps) => {
       playerState,
       playingPlaylist,
       song,
-      setCurrentSong,
+      // setCurrentSong,
       setPlayerState,
       setPlayingPlaylist,
       getSong,
